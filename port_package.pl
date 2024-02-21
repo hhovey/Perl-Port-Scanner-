@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 BEGIN { $SIG{INT} = $SIG{TERM} = sub { exit 0 } }
+my $start_t = localtime; 
 
 use Getopt::Long;
 use Pod::Usage;
@@ -14,8 +15,13 @@ GetOptions (
 
 # validate required args are given
 die "Missing --ip parameter, try --help\n" unless $target_ip;
+die "ip: $target_ip is not a valid ipv4 address\n"
+  unless $target_ip =~ /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/;
+# if there is an insodent where the packet capture must be run wiht root privileges. 
+die "Must run with root privileges\n" if $> != 0;
 
-use Net::Address::IP::Local;
+# get local IP
+use Net::Address::IP::Local->public;
 #if there is any trouble  with the use Net:: you need to download the it in Linux such as Ubuntu or Debian under...
 # sudo apt-update -y
 # sudo apt-get install -y libnet-address-ip-local-perl  
@@ -23,7 +29,7 @@ use IO::Socket::INET;
 
 my $local_ip   = Net::Address::IP::Local->public;
 
-# find a random free port by opening a socket using the protocol
+# finding a random free port by opening a socket using the protocol
 my $local_port = do {
   my $socket = IO::Socket::INET->new(Proto => 'tcp', LocalAddr => $local_ip);
   my $socket_p = $socket->sockport();
