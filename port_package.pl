@@ -16,7 +16,7 @@ GetOptions (
 die "Missing --ip parameter, try --help\n" unless $target_ip;
 
 use Net::Address::IP::Local;
-#if there is any trouble  with the use Net:: you need to download the it in Linux under...
+#if there is any trouble  with the use Net:: you need to download the it in Linux such as Ubuntu or Debian under...
 # sudo apt-update -y
 # sudo apt-get install -y libnet-address-ip-local-perl  
 use IO::Socket::INET;
